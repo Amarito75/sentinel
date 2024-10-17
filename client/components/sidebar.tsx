@@ -1,4 +1,4 @@
-import { Home, Settings } from "lucide-react";
+import { Home, Settings, Table } from "lucide-react";
 import Image from "next/image";
 import React from "react";
 import NavItem from "./ui/nav-item";
@@ -13,6 +13,12 @@ const navItems = [
     label: "Settings",
     href: "/settings",
     icon: <Settings size={20} className="mr-4" />,
+  },
+
+  {
+    label: "Table",
+    href: "/table",
+    icon: <Table size={20} className="mr-4" />,
   },
 ];
 

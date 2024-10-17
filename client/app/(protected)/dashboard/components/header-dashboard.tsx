@@ -6,7 +6,7 @@ import Searchbar from "./searchbar";
 const HeaderDashboard = async () => {
   const user = await currentUser();
   return (
-    <div className="fixed top-0 right-0 bg-muted/40 w-4/5 z-50">
+    <div className="fixed top-0 right-0 bg-muted/40 w-5/6 z-50">
       <nav className="flex items-center bg-muted/40 justify-between p-6 py-8 border-b border-border">
         <Searchbar />
         <div className="flex items-center gap-x-4 absolute right-4">

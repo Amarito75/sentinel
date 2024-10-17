@@ -18,6 +18,7 @@ import {
   LineChart,
   Banknote,
   Mail,
+  Table,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import Link from "next/link";
@@ -40,11 +41,16 @@ const navItems = [
     label: "Emails",
     icon: <Mail size={18} />,
   },
+  {
+    href: "/dashboard/table",
+    label: "Table",
+    icon: <Table size={18} />,
+  },
 ];
 
 const Sidebar = () => {
   return (
-    <div className="h-screen fixed left-0 top-0 border-r bg-muted/40 w-1/5">
+    <div className="h-screen fixed left-0 top-0 border-r bg-muted/40 w-1/6">
       <div className="flex h-full flex-col gap-2">
         <div className="flex h-14 items-center px-4 lg:h-[60px] lg:px-6">
           <Button variant="outline" size="icon" className="ml-auto h-8 w-8">
