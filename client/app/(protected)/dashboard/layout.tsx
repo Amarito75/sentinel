@@ -10,9 +10,7 @@ const Layout = ({ children }: { children: React.ReactNode }) => {
       </div>
       <div className="w-5/6 absolute right-0 inset-y-0">
         <HeaderDashboard />
-        <div className="mt-4 mx-4 md:mt-8 md:mx-8 lg:mt-32 lg:mx-24 h-full">
-          {children}
-        </div>
+        <div className="h-full mt-24">{children}</div>
       </div>
     </div>
   );

@@ -1,15 +1,19 @@
 import React from "react";
 import { DataTable } from "./components/data-table";
-import { columns, Payment } from "./components/columns";
+import { columns } from "./components/columns";
+import { Crypto } from "@/shared/types/crypto.type";
 
-async function getData(): Promise<Payment[]> {
+async function getData(): Promise<Crypto[]> {
   // Fetch data from your API here.
   return [
     {
       id: "728ed52f",
-      amount: 100,
-      status: "pending",
-      email: "m@example.com",
+      name: "Bitcoin",
+      symbol: "BTC",
+      price: 100,
+      change: 10,
+      marketCap: 1000,
+      volume: 1000,
     },
     // ...
   ];

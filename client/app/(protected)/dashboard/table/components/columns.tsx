@@ -1,8 +1,10 @@
 "use client";
 
 import { ColumnDef } from "@tanstack/react-table";
+import { ArrowUpDown } from "lucide-react";
 import { MoreHorizontal } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import { Crypto } from "@/shared/types/crypto.type";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -12,21 +14,40 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 
-export type Payment = {
-  id: string;
-  amount: number;
-  status: "pending" | "processing" | "success" | "failed";
-  email: string;
-};
-
-export const columns: ColumnDef<Payment>[] = [
+export const columns: ColumnDef<Crypto>[] = [
   {
-    accessorKey: "status",
-    header: "Status",
+    accessorKey: "name",
+    header: ({ column }) => {
+      return (
+        <Button
+          variant="ghost"
+          onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
+        >
+          Name
+          <ArrowUpDown className="ml-2 h-4 w-4" />
+        </Button>
+      );
+    },
   },
   {
-    accessorKey: "email",
-    header: "Email",
+    accessorKey: "symbol",
+    header: "Symbol",
+  },
+  {
+    accessorKey: "price",
+    header: "Price",
+  },
+  {
+    accessorKey: "change",
+    header: "Change",
+  },
+  {
+    accessorKey: "marketCap",
+    header: "Market Cap",
+  },
+  {
+    accessorKey: "volume",
+    header: "Volume",
   },
   {
     accessorKey: "amount",
