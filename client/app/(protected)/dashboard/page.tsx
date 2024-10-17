@@ -4,7 +4,7 @@ import TradingViewWidget from "@/components/charts/tradingview-widget";
 export default function DashboardPage() {
   return (
     <div className="h-full">
-      <TradingViewWidget />
+      <TradingViewWidget symbol={"btc"} />
     </div>
   );
 }

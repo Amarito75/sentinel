@@ -4,73 +4,49 @@ import { ColumnDef } from "@tanstack/react-table";
 import { ArrowUpDown, MoreHorizontal } from "lucide-react";
 import Image from "next/image";
 import { Button } from "@/components/ui/button";
-import { Crypto } from "@/shared/types/crypto.type";
-import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuItem,
-  DropdownMenuLabel,
-  DropdownMenuSeparator,
-  DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu";
-import Link from "next/link";
+import { Exchange } from "@/shared/types/crypto.type";
+import { formatDistanceToNow } from "date-fns";
 
-export const columns: ColumnDef<Crypto>[] = [
+export const columns: ColumnDef<Exchange>[] = [
   {
-    accessorKey: "image",
-    header: "Icon",
-    cell: ({ row }) => {
-      const image = row.original.image;
-      return (
-        <Image src={image} alt={row.original.name} width={32} height={32} />
-      );
-    },
-  },
-  {
-    accessorKey: "name",
+    accessorKey: "date",
     header: ({ column }) => {
       return (
         <Button
           variant="ghost"
           onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
         >
-          Name
+          Date
           <ArrowUpDown className="ml-2 h-4 w-4" />
         </Button>
       );
     },
     cell: ({ row }) => {
-      return (
-        <Link
-          href={`/dashboard/crypto/${row.original.symbol.toLowerCase()}`}
-          className="underline underline-offset-4"
-        >
-          {row.original.name}
-        </Link>
-      );
+      return <span>{formatDistanceToNow(new Date(row.original.date))}</span>;
     },
   },
   {
-    accessorKey: "symbol",
+    accessorKey: "type",
     header: ({ column }) => {
       return (
         <Button
           variant="ghost"
           onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
         >
-          Symbol
+          Type
           <ArrowUpDown className="ml-2 h-4 w-4" />
         </Button>
       );
     },
     cell: ({ row }) => {
       return (
-        <Link
-          href={`/dashboard/crypto/${row.original.symbol.toLowerCase()}`}
-          className="underline underline-offset-4"
+        <span
+          className={
+            row.original.type === "Add" ? "text-green-500" : "text-red-500"
+          }
         >
-          {row.original.symbol}
-        </Link>
+          {row.original.type}
+        </span>
       );
     },
   },
@@ -92,42 +68,42 @@ export const columns: ColumnDef<Crypto>[] = [
     },
   },
   {
-    accessorKey: "change",
+    accessorKey: "tokenFrom",
     header: ({ column }) => {
       return (
         <Button
           variant="ghost"
           onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
         >
-          Change
+          Token From
           <ArrowUpDown className="ml-2 h-4 w-4" />
         </Button>
       );
     },
   },
   {
-    accessorKey: "marketCap",
+    accessorKey: "tokenTo",
     header: ({ column }) => {
       return (
         <Button
           variant="ghost"
           onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
         >
-          Market Cap
+          Token to
           <ArrowUpDown className="ml-2 h-4 w-4" />
         </Button>
       );
     },
   },
   {
-    accessorKey: "volume",
+    accessorKey: "quantity",
     header: ({ column }) => {
       return (
         <Button
           variant="ghost"
           onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
         >
-          Volume
+          Quantity
           <ArrowUpDown className="ml-2 h-4 w-4" />
         </Button>
       );

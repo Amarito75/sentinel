@@ -2,7 +2,7 @@
 
 import React, { useEffect, useRef, memo } from "react";
 
-function TradingViewWidget() {
+function TradingViewWidget({ symbol }: { symbol: string }) {
   const container = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
@@ -14,10 +14,10 @@ function TradingViewWidget() {
     script.innerHTML = `
         {
           "autosize": true,
-          "symbol": "NASDAQ:AAPL",
+          "symbol": "${symbol}",
           "interval": "D",
           "timezone": "Etc/UTC",
-          "theme": "light",
+          "theme": "dark",
           "style": "1",
           "locale": "en",
           "allow_symbol_change": true,
@@ -25,22 +25,17 @@ function TradingViewWidget() {
           "support_host": "https://www.tradingview.com"
         }`;
     if (container.current) {
+      container.current.innerHTML = ""; // Clear any existing content
       container.current.appendChild(script);
     }
-  }, []);
+  }, [symbol]); // Add symbol to the dependency array
 
   return (
-    <>
-      <div
-        className="tradingview-widget-container"
-        ref={container}
-        style={{ height: "100%", width: "100%" }}
-      />
-      <div
-        className="tradingview-widget-container__widget"
-        style={{ height: "100%", width: "100%" }}
-      />
-    </>
+    <div
+      className="tradingview-widget-container"
+      ref={container}
+      style={{ height: "100%", width: "100%" }}
+    />
   );
 }
 
