@@ -3,9 +3,28 @@ use std::rc::{Rc, Weak};
 use anyhow::Error;
 
 use substreams_solana::pb::sf::solana::r#type::v1::ConfirmedTransaction;
+
 use substreams_solana_utils::instruction::{get_structured_instructions, StructuredInstruction, StructuredInstructions};
 use substreams_solana_utils::pubkey::PubkeyRef;
 use substreams_solana_utils::log::Log;
+
+use substreams_database_change::tables::{Row, Tables};
+
+use substreams_solana_utils::transaction::TransactionContext;
+
+use crate::parsers::{
+    system_program::parse_system_program_instruction,
+    spl_token::parse_spl_token_instruction,
+    raydium_amm::parse_raydium_amm_instruction,
+    pumpfun::parse_pumpfun_instruction,
+    mpl_token_metadata::parse_mpl_token_metadata_instruction,
+};
+
+use raydium_amm_substream::raydium_amm::constants::RAYDIUM_AMM_PROGRAM_ID;
+use mpl_token_metadata_substream::mpl_token_metadata::constants::MPL_TOKEN_METADATA_PROGRAM_ID;
+use substreams_solana_utils::spl_token::constants::TOKEN_PROGRAM_ID;
+use substreams_solana_utils::system_program::constants::SYSTEM_PROGRAM_ID;
+use pumpfun_substream::pumpfun::PUMPFUN_PROGRAM_ID;
 
 #[derive(Debug)]
 pub struct IndexedInstruction<'a> {
@@ -94,5 +113,48 @@ impl<'a> IndexedInstructions<'a> for Vec<Rc<IndexedInstruction<'a>>> {
             instructions.extend(instruction.inner_instructions.borrow().flattened().iter().map(Rc::clone));
         }
         instructions
+    }
+}
+
+pub fn parse_instruction<'a>(
+    instruction: &IndexedInstruction,
+    context: &TransactionContext,
+    tables: &'a mut Tables,
+    slot: u64,
+    transaction_index: u32,
+) -> Result<Option<&'a mut Row>, Error> {
+    let program_id = instruction.program_id();
+    let row = if program_id == RAYDIUM_AMM_PROGRAM_ID {
+        parse_raydium_amm_instruction(instruction, context, tables, slot, transaction_index)
+    } else if program_id == TOKEN_PROGRAM_ID {
+        parse_spl_token_instruction(instruction, context, tables, slot, transaction_index)
+    } else if program_id == SYSTEM_PROGRAM_ID {
+        parse_system_program_instruction(instruction, context, tables, slot, transaction_index)
+    } else if program_id == PUMPFUN_PROGRAM_ID {
+        parse_pumpfun_instruction(instruction, context, tables, slot, transaction_index)
+    } else if program_id == MPL_TOKEN_METADATA_PROGRAM_ID {
+        parse_mpl_token_metadata_instruction(instruction, context, tables, slot, transaction_index)
+    } else {
+        return Ok(None);
+    }?;
+
+    if let Some(row) = row {
+        if let Some(parent_instruction) = instruction.parent_instruction() {
+            let top_instruction = instruction.top_instruction().unwrap();
+            row
+                .set("parent_instruction_program_id", parent_instruction.program_id().to_string())
+                .set("parent_instruction_index", parent_instruction.index)
+                .set("top_instruction_program_id", top_instruction.program_id().to_string())
+                .set("top_instruction_index", top_instruction.index);
+        } else {
+            row
+                .set("parent_instruction_program_id", "")
+                .set("parent_instruction_index", -1)
+                .set("top_instruction_program_id", "")
+                .set("top_instruction_index", -1);
+        }
+        Ok(Some(row))
+    } else {
+        Ok(None)
     }
 }

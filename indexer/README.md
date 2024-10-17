@@ -48,7 +48,7 @@ export SUBSTREAMS_API_TOKEN=
 
 6. Run the sink with `make sink START=<slot>`.
 
-![alt text](image-1.png)
+![alt text](image.png)
 
 Please note that setting up `DSN` involves creating a clickhouse database and making it available by some combination of connection and credentials, both of which are described by the `DSN` variable.
 
